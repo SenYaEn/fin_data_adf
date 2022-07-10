@@ -38,16 +38,13 @@
 		],
 		"parameters": {
 			"file_path": {
-				"type": "string",
-				"defaultValue": "Config/config_dim_tables.yml"
+				"type": "string"
 			},
 			"notebook_base_path": {
-				"type": "string",
-				"defaultValue": "/"
+				"type": "string"
 			},
 			"update_tables_main_notebook_path": {
-				"type": "string",
-				"defaultValue": "/fin_data/update_tables_main"
+				"type": "string"
 			}
 		},
 		"annotations": []
