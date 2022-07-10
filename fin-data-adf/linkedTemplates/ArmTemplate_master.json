@@ -1,0 +1,105 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "fin-data-adf"
+		},
+		"marketstack_api_biweekly_properties_marketstack_api_parameters_file_path": {
+			"type": "string",
+			"defaultValue": "Config/config_dim_tables_biweekly.yml"
+		},
+		"marketstack_api_biweekly_properties_marketstack_api_parameters_notebook_base_path": {
+			"type": "string",
+			"defaultValue": "/"
+		},
+		"marketstack_api_biweekly_properties_marketstack_api_parameters_update_tables_main_notebook_path": {
+			"type": "string",
+			"defaultValue": "/fin_data/update_tables_main"
+		},
+		"marketstack_api_daily_properties_marketstack_api_parameters_file_path": {
+			"type": "string",
+			"defaultValue": "Config/config_fact_tables_daily.yml"
+		},
+		"marketstack_api_daily_properties_marketstack_api_parameters_notebook_base_path": {
+			"type": "string",
+			"defaultValue": "/"
+		},
+		"marketstack_api_daily_properties_marketstack_api_parameters_update_tables_main_notebook_path": {
+			"type": "string",
+			"defaultValue": "/fin_data/update_tables_main"
+		},
+		"marketstack_api_monthly_properties_marketstack_api_parameters_file_path": {
+			"type": "string",
+			"defaultValue": "Config/config_dim_tables_monthly.yml"
+		},
+		"marketstack_api_monthly_properties_marketstack_api_parameters_notebook_base_path": {
+			"type": "string",
+			"defaultValue": "/"
+		},
+		"marketstack_api_monthly_properties_marketstack_api_parameters_update_tables_main_notebook_path": {
+			"type": "string",
+			"defaultValue": "/fin_data/update_tables_main"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "fin-data-adf_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"marketstack_api_biweekly_properties_marketstack_api_parameters_file_path": {
+						"value": "[parameters('marketstack_api_biweekly_properties_marketstack_api_parameters_file_path')]"
+					},
+					"marketstack_api_biweekly_properties_marketstack_api_parameters_notebook_base_path": {
+						"value": "[parameters('marketstack_api_biweekly_properties_marketstack_api_parameters_notebook_base_path')]"
+					},
+					"marketstack_api_biweekly_properties_marketstack_api_parameters_update_tables_main_notebook_path": {
+						"value": "[parameters('marketstack_api_biweekly_properties_marketstack_api_parameters_update_tables_main_notebook_path')]"
+					},
+					"marketstack_api_daily_properties_marketstack_api_parameters_file_path": {
+						"value": "[parameters('marketstack_api_daily_properties_marketstack_api_parameters_file_path')]"
+					},
+					"marketstack_api_daily_properties_marketstack_api_parameters_notebook_base_path": {
+						"value": "[parameters('marketstack_api_daily_properties_marketstack_api_parameters_notebook_base_path')]"
+					},
+					"marketstack_api_daily_properties_marketstack_api_parameters_update_tables_main_notebook_path": {
+						"value": "[parameters('marketstack_api_daily_properties_marketstack_api_parameters_update_tables_main_notebook_path')]"
+					},
+					"marketstack_api_monthly_properties_marketstack_api_parameters_file_path": {
+						"value": "[parameters('marketstack_api_monthly_properties_marketstack_api_parameters_file_path')]"
+					},
+					"marketstack_api_monthly_properties_marketstack_api_parameters_notebook_base_path": {
+						"value": "[parameters('marketstack_api_monthly_properties_marketstack_api_parameters_notebook_base_path')]"
+					},
+					"marketstack_api_monthly_properties_marketstack_api_parameters_update_tables_main_notebook_path": {
+						"value": "[parameters('marketstack_api_monthly_properties_marketstack_api_parameters_update_tables_main_notebook_path')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

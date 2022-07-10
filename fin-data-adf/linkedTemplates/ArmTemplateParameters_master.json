@@ -1,0 +1,42 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "fin-data-adf"
+		},
+		"marketstack_api_biweekly_properties_marketstack_api_parameters_file_path": {
+			"value": "Config/config_dim_tables_biweekly.yml"
+		},
+		"marketstack_api_biweekly_properties_marketstack_api_parameters_notebook_base_path": {
+			"value": "/"
+		},
+		"marketstack_api_biweekly_properties_marketstack_api_parameters_update_tables_main_notebook_path": {
+			"value": "/fin_data/update_tables_main"
+		},
+		"marketstack_api_daily_properties_marketstack_api_parameters_file_path": {
+			"value": "Config/config_fact_tables_daily.yml"
+		},
+		"marketstack_api_daily_properties_marketstack_api_parameters_notebook_base_path": {
+			"value": "/"
+		},
+		"marketstack_api_daily_properties_marketstack_api_parameters_update_tables_main_notebook_path": {
+			"value": "/fin_data/update_tables_main"
+		},
+		"marketstack_api_monthly_properties_marketstack_api_parameters_file_path": {
+			"value": "Config/config_dim_tables_monthly.yml"
+		},
+		"marketstack_api_monthly_properties_marketstack_api_parameters_notebook_base_path": {
+			"value": "/"
+		},
+		"marketstack_api_monthly_properties_marketstack_api_parameters_update_tables_main_notebook_path": {
+			"value": "/fin_data/update_tables_main"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}

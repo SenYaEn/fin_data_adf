@@ -1,0 +1,261 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "fin-data-adf"
+		},
+		"marketstack_api_biweekly_properties_marketstack_api_parameters_file_path": {
+			"type": "string",
+			"defaultValue": "Config/config_dim_tables_biweekly.yml"
+		},
+		"marketstack_api_biweekly_properties_marketstack_api_parameters_notebook_base_path": {
+			"type": "string",
+			"defaultValue": "/"
+		},
+		"marketstack_api_biweekly_properties_marketstack_api_parameters_update_tables_main_notebook_path": {
+			"type": "string",
+			"defaultValue": "/fin_data/update_tables_main"
+		},
+		"marketstack_api_daily_properties_marketstack_api_parameters_file_path": {
+			"type": "string",
+			"defaultValue": "Config/config_fact_tables_daily.yml"
+		},
+		"marketstack_api_daily_properties_marketstack_api_parameters_notebook_base_path": {
+			"type": "string",
+			"defaultValue": "/"
+		},
+		"marketstack_api_daily_properties_marketstack_api_parameters_update_tables_main_notebook_path": {
+			"type": "string",
+			"defaultValue": "/fin_data/update_tables_main"
+		},
+		"marketstack_api_monthly_properties_marketstack_api_parameters_file_path": {
+			"type": "string",
+			"defaultValue": "Config/config_dim_tables_monthly.yml"
+		},
+		"marketstack_api_monthly_properties_marketstack_api_parameters_notebook_base_path": {
+			"type": "string",
+			"defaultValue": "/"
+		},
+		"marketstack_api_monthly_properties_marketstack_api_parameters_update_tables_main_notebook_path": {
+			"type": "string",
+			"defaultValue": "/fin_data/update_tables_main"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/dataprocessing_LS')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-683902269430001.1.azuredatabricks.net",
+					"authentication": "MSI",
+					"workspaceResourceId": "/subscriptions/a29df58d-f4aa-49fa-b1d5-1851f697873e/resourceGroups/pet_projects/providers/Microsoft.Databricks/workspaces/dataprocessing",
+					"existingClusterId": "0615-184836-6noaptd2"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/marketstack_api')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Update Tables",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "01:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": {
+								"value": "@pipeline().parameters.update_tables_main_notebook_path",
+								"type": "Expression"
+							},
+							"baseParameters": {
+								"file_path": {
+									"value": "@pipeline().parameters.file_path",
+									"type": "Expression"
+								},
+								"notebook_base_path": {
+									"value": "@pipeline().parameters.notebook_base_path",
+									"type": "Expression"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "dataprocessing_LS",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"file_path": {
+						"type": "string"
+					},
+					"notebook_base_path": {
+						"type": "string"
+					},
+					"update_tables_main_notebook_path": {
+						"type": "string"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/dataprocessing_LS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/marketstack_api_biweekly')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "marketstack_api",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"file_path": "[parameters('marketstack_api_biweekly_properties_marketstack_api_parameters_file_path')]",
+							"notebook_base_path": "[parameters('marketstack_api_biweekly_properties_marketstack_api_parameters_notebook_base_path')]",
+							"update_tables_main_notebook_path": "[parameters('marketstack_api_biweekly_properties_marketstack_api_parameters_update_tables_main_notebook_path')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Week",
+						"interval": 2,
+						"startTime": "2022-07-10T11:12:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								10
+							],
+							"hours": [
+								5
+							],
+							"weekDays": [
+								"Monday"
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/marketstack_api')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/marketstack_api_daily')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "marketstack_api",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"file_path": "[parameters('marketstack_api_daily_properties_marketstack_api_parameters_file_path')]",
+							"notebook_base_path": "[parameters('marketstack_api_daily_properties_marketstack_api_parameters_notebook_base_path')]",
+							"update_tables_main_notebook_path": "[parameters('marketstack_api_daily_properties_marketstack_api_parameters_update_tables_main_notebook_path')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2022-07-10T11:10:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								10
+							],
+							"hours": [
+								6
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/marketstack_api')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/marketstack_api_monthly')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "marketstack_api",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"file_path": "[parameters('marketstack_api_monthly_properties_marketstack_api_parameters_file_path')]",
+							"notebook_base_path": "[parameters('marketstack_api_monthly_properties_marketstack_api_parameters_notebook_base_path')]",
+							"update_tables_main_notebook_path": "[parameters('marketstack_api_monthly_properties_marketstack_api_parameters_update_tables_main_notebook_path')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Month",
+						"interval": 1,
+						"startTime": "2022-07-10T11:17:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								10
+							],
+							"hours": [
+								3
+							],
+							"monthDays": [
+								1
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/marketstack_api')]"
+			]
+		}
+	]
+}
