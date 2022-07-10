@@ -1,0 +1,40 @@
+{
+	"name": "marketstack_api_monthly",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "marketstack_api",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"file_path": "Config/config_dim_tables_monthly.yml",
+					"notebook_base_path": "/",
+					"update_tables_main_notebook_path": "/fin_data/update_tables_main"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Month",
+				"interval": 1,
+				"startTime": "2022-07-10T11:17:00Z",
+				"timeZone": "UTC",
+				"schedule": {
+					"minutes": [
+						10
+					],
+					"hours": [
+						3
+					],
+					"monthDays": [
+						1
+					]
+				}
+			}
+		}
+	}
+}

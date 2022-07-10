@@ -1,0 +1,40 @@
+{
+	"name": "marketstack_api_biweekly",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "marketstack_api",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"file_path": "Config/config_dim_tables_biweekly.yml",
+					"notebook_base_path": "/",
+					"update_tables_main_notebook_path": "/fin_data/update_tables_main"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Week",
+				"interval": 2,
+				"startTime": "2022-07-10T11:12:00Z",
+				"timeZone": "UTC",
+				"schedule": {
+					"minutes": [
+						10
+					],
+					"hours": [
+						5
+					],
+					"weekDays": [
+						"Monday"
+					]
+				}
+			}
+		}
+	}
+}
