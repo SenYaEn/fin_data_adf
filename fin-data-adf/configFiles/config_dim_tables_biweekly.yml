@@ -1,0 +1,14 @@
+general:
+    access_key_name: 'MarketstackAccessKey'
+    base_url: 'https://api.marketstack.com/v1'
+    landing_database_name: 'landing'
+    staging_database_name: 'staging'
+table_type: 'Dim'
+tables:
+    -
+        is_enabled: True
+        is_full_reload: False
+        table_name: 'DimCompany'
+        exchange: 'XTAI'
+        merge_keys: 'destination.CompanyId = updates.symbol'
+        column_mapping: {"CompanyId": "updates.symbol", "CompanyName": "updates.name", "ExchangeId": "updates.exchangeMic"}

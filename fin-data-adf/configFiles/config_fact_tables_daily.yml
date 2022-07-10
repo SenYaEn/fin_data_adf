@@ -1,0 +1,34 @@
+general:
+    access_key_name: 'MarketstackAccessKey'
+    base_url: 'https://api.marketstack.com/v1'
+    landing_database_name: 'landing'
+    staging_database_name: 'staging'
+table_type: 'Fact'
+tables:
+    -
+        is_enabled: True
+        is_full_reload: False
+        endpoint_name: 'dividends'
+        history_start_date: '2010-01-01'
+        table_name: 'FactDividends'
+        exchanges: 'XTAI'
+        merge_keys: 'destination.PK = updates.pk'
+        column_mapping: {"PK": "updates.pk", "Symbol": "updates.symbol", "Dividend": "updates.dividend", "`Date`": "updates.`date`"}
+    -
+        is_enabled: True
+        is_full_reload: False
+        endpoint_name: 'eod'
+        history_start_date: '2015-01-01'
+        table_name: 'FactEod'
+        exchanges: 'XTAI'
+        merge_keys: 'destination.PK = updates.pk'
+        column_mapping: {"PK": "updates.pk", "Open": "updates.open", "High": "updates.high", "Low": "updates.low", "Close": "updates.close", "Volume": "updates.volume", "SplitFactor": "updates.split_factor", "Dividend": "updates.dividend", "Symbol": "updates.symbol", "ExchangeId": "updates.`exchange`", "`Date`": "updates.`date`"}
+    -
+        is_enabled: True
+        is_full_reload: False
+        endpoint_name: 'splits'
+        history_start_date: '2000-01-01'
+        table_name: 'FactSplits'
+        exchanges: 'XTAI'
+        merge_keys: 'destination.PK = updates.pk'
+        column_mapping: {"PK": "updates.pk", "Symbol": "updates.symbol", "SplitFactor": "updates.split_factor", "`Date`": "updates.`date`"}

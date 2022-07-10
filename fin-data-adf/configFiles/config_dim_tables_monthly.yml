@@ -1,0 +1,21 @@
+general:
+    access_key_name: 'MarketstackAccessKey'
+    base_url: 'https://api.marketstack.com/v1'
+    landing_database_name: 'landing'
+    staging_database_name: 'staging'
+table_type: 'Dim'
+tables:
+    -
+        is_enabled: True
+        is_full_reload: False
+        table_name: 'DimCurrency'
+        exchange: ''
+        merge_keys: 'destination.CurrencyId = updates.code'
+        column_mapping: {"CurrencyId": "updates.code", "Symbol": "updates.symbol", "Name": "updates.name"}
+    -
+        is_enabled: True
+        is_full_reload: False
+        table_name: 'DimExchange'
+        exchange: ''
+        merge_keys: 'destination.ExchangeId = updates.mic'
+        column_mapping: {"ExchangeId": "updates.mic", "Name": "updates.name", "Acronym": "updates.acronym", "Country": "updates.country", "CountryCode": "updates.country_code", "City": "updates.city", "Website": "updates.website", "TimezoneName": "updates.timezoneName", "TimezoneCode": "updates.timezoneAbbr", "CurrencyId": "updates.currencyCode"}

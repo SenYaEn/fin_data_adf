@@ -1,6 +1,55 @@
 {
 	"name": "marketstack_api",
 	"properties": {
+		"activities": [
+			{
+				"name": "Update Tables",
+				"type": "DatabricksNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "01:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": {
+						"value": "@pipeline().parameters.update_tables_main_notebook_path",
+						"type": "Expression"
+					},
+					"baseParameters": {
+						"file_path": {
+							"value": "@pipeline().parameters.file_path",
+							"type": "Expression"
+						},
+						"notebook_base_path": {
+							"value": "@pipeline().parameters.notebook_base_path",
+							"type": "Expression"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "dataprocessing_LS",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"file_path": {
+				"type": "string",
+				"defaultValue": "Config/config_dim_tables.yml"
+			},
+			"notebook_base_path": {
+				"type": "string",
+				"defaultValue": "/"
+			},
+			"update_tables_main_notebook_path": {
+				"type": "string",
+				"defaultValue": "/fin_data/update_tables_main"
+			}
+		},
 		"annotations": []
 	}
 }
